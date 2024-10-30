@@ -53,6 +53,7 @@
                                     <td>{{ member.organization }}</td>
                                     <td>{{ member.date_joined }}</td>
                                     <td><a href="{% url 'orgmember-edit' member.id %}">Edit</a></td>
+                                    <td><a href="{% url 'orgmember-delete' member.id %}" class="text-danger">Delete</a></td>
                                 </tr>
                                 {% empty %}
                                 <tr>
