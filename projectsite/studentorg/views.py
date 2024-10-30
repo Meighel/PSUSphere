@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization, OrgMember
 from studentorg.forms import OrganizationForm, OrgMemberForm
 from django.urls import reverse_lazy
+from django.urls import reverse
 
 
 class HomePageView(ListView):

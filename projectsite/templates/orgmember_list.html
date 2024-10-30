@@ -52,16 +52,11 @@
                                     <td>{{ member.student.program.prog_name }}</td>
                                     <td>{{ member.organization }}</td>
                                     <td>{{ member.date_joined }}</td>
-                                    <td><a href="orgmember_list/{{ object.id }}">Edit</a></td>
+                                    <td><a href="{% url 'orgmember-edit' member.id %}">Edit</a></td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="4" style="text-align: center">
-                                        <p class="text-sm font-weight-bold mb-0">No Records Found</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="5" style="text-align: center">
                                         <p class="text-sm font-weight-bold mb-0">No Records Found</p>
                                     </td>
                                 </tr>
