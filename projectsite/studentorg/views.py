@@ -1,13 +1,16 @@
+from typing import Any
+from django.db.models.query import QuerySet
+from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization, OrgMember, Student, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 from django.urls import reverse_lazy
-from typing import Any
-from django.db.models.query import QuerySet
-from django.db.models import Q
+from django.utils.decorators import method decorator
+from django.contrib.auth.decorators import login_required
 
+@method_decorator(login_required, name='dispatch'
 class HomePageView(ListView):
     model = Organization
     context_object_name = 'home'
