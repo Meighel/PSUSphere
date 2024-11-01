@@ -110,6 +110,15 @@ class CollegeList(ListView):
     template_name = 'college_list.html'
     paginate_by = 5
 
+    
+    def get_queryset(self, *args, **kwargs):
+        qa = super(CollegeList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") !=None:
+            query = self.request.GET.get('q')
+            qa = qa.filter(Q(college_name__icontains=query))
+        return qa
+
+
 class CollegeCreateView(CreateView):
     model = College
     form_class = CollegeForm
