@@ -24,7 +24,7 @@ class OrganizationList(ListView):
         qa = super(OrganizationList, self).get_queryset(*args, **kwargs)
         if self.request.GET.get("q") !=None:
             query = self.request.GET.get('q')
-            qa = qa.filter(Q(name__icontains=query) | Q(description__icontains=query))
+            qa = qa.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(college__college_name__icontains=query))
         return qa
 
 class OrganizationCreateView(CreateView):
