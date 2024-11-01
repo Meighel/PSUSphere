@@ -5,6 +5,7 @@ from studentorg.models import Organization, OrgMember, Student, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from typing import Any
 from django.db.models.query import QuerySet
@@ -26,7 +27,9 @@ class OrganizationList(ListView):
         qa = super(OrganizationList, self).get_queryset(*args, **kwargs)
         if self.request.GET.get("q") !=None:
             query = self.request.GET.get('q')
-            qa = qa.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(college__college_name__icontains=query))
+            qa = qa.filter(Q(name__icontains=query) | 
+                           Q(description__icontains=query) | 
+                           Q(college__college_name__icontains=query))
         return qa
 
 class OrganizationCreateView(CreateView):
@@ -46,7 +49,7 @@ class OrganizationDeleteView(DeleteView):
     template_name = 'org_del.html'
     success_url = reverse_lazy('organization-list')
 
-class OrgMemberList (ListView):
+class OrgMemberList(ListView):
     model = OrgMember
     context_object_name = 'orgmember'
     template_name = 'orgmember_list.html'
@@ -54,9 +57,15 @@ class OrgMemberList (ListView):
 
     def get_queryset(self, *args, **kwargs):
         qa = super(OrgMemberList, self).get_queryset(*args, **kwargs)
-        if self.request.GET.get("q") !=None:
+        if self.request.GET.get("q"):
             query = self.request.GET.get('q')
-            qa = qa.filter(Q(student__firstname__icontains=query) | Q(student__lastname__icontains=query) | Q(student__program__prog_name__icontains=query) | Q(organization__name__icontains=query) | Q(date_joined__icontains=query))
+            qa = qa.filter(Q(student__firstname__icontains=query) | 
+                           Q(student__lastname__icontains=query) | 
+                           Q(student__middlename__icontains=query) | 
+                           Q(student__program__prog_name__icontains=query) | 
+                           Q(organization__name__icontains=query) |
+                           Q(date_joined__icontains=query))
+
         return qa
     
 class OrgMemberCreateView(CreateView):
@@ -86,7 +95,11 @@ class StudentList (ListView):
         qa = super(StudentList, self).get_queryset(*args, **kwargs)
         if self.request.GET.get("q") !=None:
             query = self.request.GET.get('q')
-            qa = qa.filter(Q(student_id__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query) | Q(middlename__icontains=query) | Q(program__prog_name__icontains=query))
+            qa = qa.filter(Q(student_id__icontains=query) | 
+                           Q(firstname__icontains=query) | 
+                           Q(lastname__icontains=query) | 
+                           Q(middlename__icontains=query) | 
+                           Q(program__prog_name__icontains=query))
         return qa
 
 class StudentCreateView(CreateView):
@@ -148,7 +161,8 @@ class ProgramList(ListView):
         qa = super(ProgramList, self).get_queryset(*args, **kwargs)
         if self.request.GET.get("q") !=None:
             query = self.request.GET.get('q')
-            qa = qa.filter(Q(college__college_name__icontains=query) | Q(prog_name__icontains=query))
+            qa = qa.filter(Q(college__college_name__icontains=query) | 
+                           Q(prog_name__icontains=query))
         return qa
 
 class ProgramCreateView(CreateView):
