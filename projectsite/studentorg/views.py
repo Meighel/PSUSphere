@@ -10,6 +10,11 @@ from django.contrib.auth.decorators import login_required
 from typing import Any
 from django.db.models.query import QuerySet
 from django.db.models import Q
+from django.db import connection
+from django.http import JsonResponse
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count
+from datetime import datetime
 
 @method_decorator(login_required, name='dispatch')
 class HomePageView(ListView):
@@ -181,3 +186,50 @@ class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
+
+class ChartView(ListView):
+    template_name = 'chart.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        pass
+
+def LineCountbyMonth2024(request):
+    data = (
+        OrgMember.objects.filter(date_joined__year=2024)
+        .annotate(month=ExtractMonth('date_joined'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    activity_data = {item['month']: item['count'] for item in data}
+
+    all_months = range(1, 13) 
+    complete_data = {month: activity_data.get(month, 0) for month in all_months}
+
+    chart_data = {
+        'labels': [datetime(2024, month, 1).strftime('%b') for month in complete_data.keys()],
+        'series': [[count for count in complete_data.values()]],
+    }
+
+    return JsonResponse(chart_data)
+
+
+def PieStudentCountbyOrg(request):
+    data = (
+        Student.objects.values('program__prog_name')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    chart_data = {
+        'labels': [item['program__prog_name'] for item in data],
+        'series': [item['count'] for item in data],
+    }
+
+    return JsonResponse(chart_data)
+

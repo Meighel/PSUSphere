@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <title>Chartist Test</title>
+    <style>
+        .barChart {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-inner">
+        <h4 class="page-title">Chart (Chartist)</h4>
+        <div class="page-category">Simple yet flexible Javascript charting for designers & developers. Please checkout their <a href="https://www.chartjs.org/" target="_blank">full documentation</a>.</div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Line Chart</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-container">
+                            <div class="lineChart ct-perfect-fourth"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Bar Chart</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-container">
+                            <div class="barChart ct-perfect-fourth"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Line Chart
+            new Chartist.Line('.lineChart', {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                series: [
+                    [542, 480, 430, 550, 530, 453, 380, 434, 568, 610, 700, 900]
+                ]
+            }, {
+                fullWidth: true,
+                chartPadding: {
+                    top: 15,
+                    right: 30,
+                    bottom: 15,
+                    left: 15
+                },
+                showPoint: true,
+                axisY: {
+                    onlyInteger: true
+                },
+                axisX: {
+                    showGrid: false
+                }
+            });
+    
+            // Bar Chart
+            new Chartist.Bar('.barChart', {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                series: [
+                    [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]
+                ]
+            }, {
+                axisY: {
+                    offset: 20,
+                    labelInterpolationFnc: function(value) {
+                        return value + ' units';
+                    },
+                },
+                fullWidth: true,
+                chartPadding: {
+                    top: 15,
+                    right: 30,
+                    bottom: 15,
+                    left: 15
+                },
+                plugins: [
+                    Chartist.plugins.tooltip()  
+                ]
+            });
+        });
+    </script>
+    
+    <style>
+        .ct-series-a .ct-point, .ct-series-a .ct-bar {
+            stroke: rgb(23, 125, 255);
+        }
+    
+        .lineChart .barChart {
+            height: 400px;
+            width: 600px;
+            overflow: hidden;
+        }
+    
+        .page-inner {
+            overflow-x: hidden;
+            padding-left: 20px;
+            padding-top: 10%;
+        }
+    
+        .col-md-9
+        {
+            margin-top: 2%;
+            margin-left: 2%;
+        }
+    </style>
+</body>
+</html>

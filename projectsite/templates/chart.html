@@ -1,0 +1,255 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<style>
+    .lineChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
+        stroke: rgb(133, 236, 181);
+    }
+
+    .biLineChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
+        stroke: rgb(255, 220, 23);
+    }
+
+    .biLineChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
+        stroke: rgb(255, 209, 220);
+    }
+
+    .lineChart .barChart {
+        height: 400px;
+        width: 600px;
+        overflow: hidden;
+    }
+
+    .page-inner {
+        overflow-x: hidden;
+        padding-left: 20px;
+        padding-top: 10%;
+    }
+
+    .col-md-9
+    {
+        margin-top: 2%;
+        margin-left: 2%;
+    }
+</style>
+
+<div class="page-inner">
+    <h4 class="page-title">Chart (Chartist)</h4>
+    <div class="page-category">Simple yet flexible Javascript charting for designers & developers. Please checkout their <a href="https://www.chartjs.org/" target="_blank">full documentation</a>.</div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Line Chart</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-container">
+                        <div class="lineChart ct-perfect-fourth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Pie Chart</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-container">
+                        <div class="pieChart ct-perfect-fourth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Bi-Polar Line Chart</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-container">
+                        <div class="biLineChart ct-perfect-fourth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Horizontal Bar Chart</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-container">
+                        <div class="horBarChart ct-perfect-fourth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Scatter Plots Chart</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-container">
+                        <div class="scatterPlotsChart ct-perfect-fourth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Line Chart
+        fetch('/line-count-by-month-2024/')
+            .then(response => response.json())
+            .then(data => {
+                new Chartist.Line('.lineChart', data, {
+                    fullWidth: true,
+                    chartPadding: {
+                        top: 15,
+                        right: 30,
+                        bottom: 15,
+                        left: 15
+                    },
+                    axisY: {
+                        onlyInteger: true,
+                        low: 0
+                    },
+                    axisX: {
+                        showGrid: true
+                    },
+                    plugins: [
+                        Chartist.plugins.tooltip()
+                    ]
+                });
+            })
+
+        // Pie Chart 
+        fetch('/pie-student-count-by-org/')
+            .then(response => response.json())
+            .then(data => {
+                // Calculate percentages for labels
+                const total = data.series.reduce((sum, count) => sum + count, 0);
+                const percentages = data.series.map(count => ((count / total) * 100).toFixed(1) + '%');
+
+                // Prepare series with meta for tooltips
+                const seriesWithMeta = data.series.map((value, idx) => ({
+                    value: value,
+                    meta: data.labels[idx] // Add program name as meta
+                }));
+
+                // Create the Pie Chart with fetched data
+                new Chartist.Pie('.pieChart', {
+                    series: seriesWithMeta, 
+                    labels: percentages 
+                }, {
+                    chartPadding: 30,
+                    labelOffset: 50,
+                    labelDirection: 'explode',
+                    labelInterpolationFnc: function (value) {
+                        return value; 
+                    },
+                    plugins: [
+                        Chartist.plugins.tooltip({
+                            tooltipFnc: function (meta, value) {
+                                return `${meta}: ${value} students`;
+                            }
+                        })
+                    ]
+                });
+            })
+
+
+        // Bi-Polar Line Chart
+        new Chartist.Line('.biLineChart', {
+            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            series: [
+                [1, -2, 3, -4, 5, -6, 7, -8, 9, -10]
+            ]
+        }, {
+            high: 10,
+            low: -10,
+            showArea: true,
+            showPoint: true,
+            fullWidth: true,
+            chartPadding: {
+                top: 15,
+                right: 30,
+                bottom: 15,
+                left: 15
+            },
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        });
+
+        // Horizontal Bar Chart
+        new Chartist.Bar('.horBarChart', {
+            labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+            series: [
+                [5, 4, 3, 7],
+                [3, 2, 9, 5],
+                [1, 5, 8, 4]
+            ]
+        }, {
+            seriesBarDistance: 10,
+            reverseData: true,
+            horizontalBars: true,
+            axisY: {
+                offset: 70
+            },
+            axisX: {
+                labelInterpolationFnc: function(value){
+                    return value % 1 === 0 ? value : null;
+                }
+            },
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        });
+
+        // Scatter Plot Chart
+        const scatterData = {
+            series: [
+                Array.from({ length: 30 }, () => ({ x: Math.random() * 100, y: Math.random() * 100 })),
+                Array.from({ length: 30 }, () => ({ x: Math.random() * 100, y: Math.random() * 100 }))
+            ]
+        };
+
+        const scatterOptions = {
+            showLine: false,
+            axisX: {
+                labelInterpolationFnc: function (value) {
+                    return Math.round(value);
+                },
+                type: Chartist.FixedScaleAxis,
+                low: 0,  // Set minimum value for the x-axis
+                high: 100,  // Set maximum value for the x-axis
+                ticks: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]  // Define ticks to create more readable labels
+            },
+            // axisY: {
+            //     labelInterpolationFnc: function (value) {
+            //         return Math.round(value);
+            //     },
+            //     low: 0,  // Set minimum value for the y-axis
+            //     high: 100,  // Set maximum value for the y-axis
+            //     ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]  // Define ticks for better clarity
+            // },
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        };
+
+        new Chartist.Line('.scatterPlotsChart', scatterData, scatterOptions);
+    });
+</script>
+
+
+
+{% endblock %}

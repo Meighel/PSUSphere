@@ -7,6 +7,8 @@
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+	<link rel="stylesheet" href="{% static 'css/chartist.min.css' %}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.css">
 	<link rel="stylesheet" href="{% static 'css/ready.css' %}">
 	<link rel="stylesheet" href="{% static 'css/demo.css' %}">
 </head>
@@ -136,7 +138,7 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="{% static 'img/profile.jpg' %}">
+							<img src="{% static 'img/profile.jpg' %}" alt="User profile picture">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -171,7 +173,7 @@
 					</div>
 					<ul class="nav">
 						<li class="nav-item">
-							<a href="index.html">
+							<a href="{% url 'dashboard-chart' %}">
 								<i class="la la-dashboard"></i>
 								<p>Dashboard</p>
 							</a>
@@ -210,6 +212,7 @@
 					</ul>
 				</div>
 			</div>
+
 			<div class="main-panel">
 				{% block content %}
 				{% endblock %}
@@ -277,4 +280,8 @@
 <script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
 <script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
 <script src="{% static 'js/ready.min.js' %}"></script>
+
+<script src="{% static 'js/plugin/chartist/chartist.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
 </html>

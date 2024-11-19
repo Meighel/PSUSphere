@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
+from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, LineCountbyMonth2024, PieStudentCountbyOrg
 from studentorg import views
 from django.contrib.auth import views as auth_views
 
@@ -45,4 +45,7 @@ urlpatterns = [
     path('program_list/<pk>/delete', ProgramDeleteView.as_view(), name="program-delete"),
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('dashboard_chart', ChartView.as_view(), name='dashboard-chart'),
+    path('line-count-by-month-2024/', views.LineCountbyMonth2024, name='line-count-by-month-2024'),
+    path('pie-student-count-by-org/', views.PieStudentCountbyOrg, name='pie-student-count-by-org'),
 ]
