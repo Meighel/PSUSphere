@@ -233,3 +233,16 @@ def PieStudentCountbyOrg(request):
 
     return JsonResponse(chart_data)
 
+def OrgCountByCollege(request):
+    data = (
+        Organization.objects.values('college__college_name')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+
+    chart_data = {
+        'labels': [item['college__college_name'] for item in data],
+        'series': [item['count'] for item in data],
+    }
+
+    return JsonResponse(chart_data)

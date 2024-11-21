@@ -33,13 +33,13 @@
 </style>
 
 <div class="page-inner">
-    <h4 class="page-title">Chart (Chartist)</h4>
+    <h4 class="page-title">Chart</h4>
     <div class="page-category">Simple yet flexible Javascript charting for designers & developers. Please checkout their <a href="https://www.chartjs.org/" target="_blank">full documentation</a>.</div>
     <div class="row">
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Line Chart</div>
+                    <div class="card-title"><b>Line Chart:</b> Students Joined Organizations in 2024</div>
                 </div>
                 <div class="card-body">
                     <div class="card-container">
@@ -52,7 +52,7 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Pie Chart</div>
+                    <div class="card-title"><b>Pie Chart:</b> Number of Students in Each Courses</div>
                 </div>
                 <div class="card-body">
                     <div class="card-container">
@@ -78,7 +78,7 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Horizontal Bar Chart</div>
+                    <div class="card-title"><b>Horizontal Bar Chart:</b> Organizations in a College</div>
                 </div>
                 <div class="card-body">
                     <div class="card-container">
@@ -190,29 +190,31 @@
         });
 
         // Horizontal Bar Chart
-        new Chartist.Bar('.horBarChart', {
-            labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-            series: [
-                [5, 4, 3, 7],
-                [3, 2, 9, 5],
-                [1, 5, 8, 4]
-            ]
-        }, {
-            seriesBarDistance: 10,
-            reverseData: true,
-            horizontalBars: true,
-            axisY: {
-                offset: 70
-            },
-            axisX: {
-                labelInterpolationFnc: function(value){
-                    return value % 1 === 0 ? value : null;
-                }
-            },
-            plugins: [
-                Chartist.plugins.tooltip()
-            ]
-        });
+        fetch('/org-count-by-college/')
+            .then(response => response.json())
+            .then(data => {
+                new Chartist.Bar('.horBarChart', {
+                    labels: data.labels,  
+                    series: [data.series]  
+                }, {
+                    horizontalBars: true,
+                    reverseData: true,  
+                    axisX: {
+                        onlyInteger: true, // Force integer ticks
+                    },
+                    axisY: {
+                        offset: 120,  // Adjust for long labels
+                    },
+                    plugins: [
+                        Chartist.plugins.tooltip({
+                            tooltipFnc: function (meta, value) {
+                                return `${value} organization(s)`;  
+                            }
+                        })
+                    ]
+                });
+            })
+
 
         // Scatter Plot Chart
         const scatterData = {
