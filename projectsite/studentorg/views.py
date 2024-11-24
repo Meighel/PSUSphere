@@ -248,17 +248,31 @@ def HorOrgCountByCollege(request):
     return JsonResponse(chart_data)
 
 def program_frequency_chart(request):
-    # Fetch colleges and count the number of programs associated with each college
     college_program_count = College.objects.annotate(num_programs=Count('program'))
 
-    # Prepare the data for the chart
     colleges = [college.college_name for college in college_program_count]
     program_counts = [college.num_programs for college in college_program_count]
 
-    # Return the data as JSON
     data = {
         'colleges': colleges,
         'program_counts': program_counts,
     }
     
+    return JsonResponse(data)
+
+def student_enrollment_by_year(request):
+    students_by_year = Student.objects.annotate(enrollment_year=Count('student_id'))
+
+    years = set([student.student_id[:4] for student in students_by_year]) 
+    year_counts = {year: 0 for year in years}
+
+    for student in students_by_year:
+        year = student.student_id[:4]
+        year_counts[year] += 1
+
+    data = {
+        'years': list(year_counts.keys()), 
+        'student_counts': list(year_counts.values()),
+    }
+
     return JsonResponse(data)

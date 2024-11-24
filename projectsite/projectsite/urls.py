@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, LineCountbyMonth2024, PieStudentCountbyOrg, HorOrgCountByCollege, program_frequency_chart
+from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, LineCountbyMonth2024, PieStudentCountbyOrg, HorOrgCountByCollege, program_frequency_chart, student_enrollment_by_year
 from studentorg import views
 from django.contrib.auth import views as auth_views
 
@@ -50,4 +50,5 @@ urlpatterns = [
     path('pie-student-count-by-org/', views.PieStudentCountbyOrg, name='pie-student-count-by-org'),
     path('org-count-by-college/', views.HorOrgCountByCollege, name='org-count-by-college'),
     path('program-frequency-chart/', views.program_frequency_chart, name='program_frequency_chart'),
+    path('student-enrollment-by-year/', views.student_enrollment_by_year, name='student_enrollment_by_year'),
 ]

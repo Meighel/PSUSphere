@@ -83,15 +83,15 @@
             </div>
         </div>
 
-        <!-- Venn Diagram -->
+        <!-- Polar Area Chart -->
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title"><b>Venn Diagram:</b> Distribution of Student Interests</div>
+                    <div class="card-title"><b>Polar Area Chart:</b> Number of Students Enrolled Every Year</div>
                 </div>
                 <div class="card-body">
                     <div class="card-container">
-                        <canvas id="vennChart" class="vennChart"></canvas>
+                        <canvas id="polarAreaChart" class="polarAreaChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -174,11 +174,9 @@
         fetch('/program-frequency-chart/')
         .then(response => response.json())
         .then(data => {
-            // Prepare data for the radar chart
-            const labels = data.colleges;  // College names
-            const programCounts = data.program_counts;  // Program counts
+            const labels = data.colleges; 
+            const programCounts = data.program_counts;  
 
-            // Create the radar chart
             new Chart(document.getElementById('radarChart'), {
                 type: 'radar',
                 data: {
@@ -187,8 +185,8 @@
                         label: 'Programs per College',
                         data: programCounts,
                         fill: true,
-                        backgroundColor: 'rgba(79, 140, 255, 0.2)', // Color of the filled area
-                        borderColor: 'rgb(79, 140, 255)', // Border color of the chart
+                        backgroundColor: 'rgba(79, 140, 255, 0.2)', 
+                        borderColor: 'rgb(79, 140, 255)', 
                         borderWidth: 2
                     }]
                 },
@@ -205,30 +203,61 @@
             });
         });
 
-        // Venn Diagram (Fake Data using Chart.js)
-        var vennCtx = document.getElementById('vennChart').getContext('2d');
-        var vennChart = new Chart(vennCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Arts', 'Sports', 'Music'],
-                datasets: [{
-                    label: 'Student Interests',
-                    data: [30, 45, 25],
-                    backgroundColor: ['rgba(135, 119, 255, 0.6)', 'rgba(255, 220, 23, 0.6)', 'rgba(133, 236, 181, 0.6)']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function (tooltipItem) {
-                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' students';
+        // Polar Area Chart
+        fetch('/student-enrollment-by-year/')
+        .then(response => response.json())
+        .then(data => {
+            
+            const years = data.years;  
+            const studentCounts = data.student_counts;  
+
+            new Chart(document.getElementById('polarAreaChart'), {
+                type: 'polarArea',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Students Enrolled by Year',
+                        data: studentCounts,
+                        backgroundColor: [
+                            'rgba(79, 140, 255, 0.2)',  
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgb(79, 140, 255)',  
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 159, 64)',
+                            'rgb(75, 192, 192)',
+                            'rgb(153, 102, 255)',
+                            'rgb(255, 159, 64)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
                             }
+                        },
+                    },
+                    scale: {
+                        ticks: {
+                            beginAtZero: true
                         }
                     }
                 }
-            }
+            });
         });
 
         // Horizontal Bar Chart
