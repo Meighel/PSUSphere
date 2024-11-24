@@ -1,16 +1,22 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
 <style>
     .lineChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
         stroke: rgb(133, 236, 181);
     }
 
-    .biLineChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
+    .pieChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
         stroke: rgb(255, 220, 23);
     }
 
-    .biLineChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
+    .radarChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
         stroke: rgb(255, 209, 220);
+    }
+
+    .vennChart .ct-series-a .ct-point, .ct-series-a .ct-bar {
+        stroke: rgb(135, 119, 255);
     }
 
     .lineChart .barChart {
@@ -25,8 +31,7 @@
         padding-top: 10%;
     }
 
-    .col-md-9
-    {
+    .col-md-9 {
         margin-top: 2%;
         margin-left: 2%;
     }
@@ -36,6 +41,7 @@
     <h4 class="page-title">Chart</h4>
     <div class="page-category">Simple yet flexible Javascript charting for designers & developers. Please checkout their <a href="https://www.chartjs.org/" target="_blank">full documentation</a>.</div>
     <div class="row">
+        <!-- Line Chart -->
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
@@ -49,6 +55,7 @@
             </div>
         </div>
 
+        <!-- Pie Chart -->
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
@@ -62,19 +69,35 @@
             </div>
         </div>
 
+        <!-- Radar Chart -->
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Bi-Polar Line Chart</div>
+                    <div class="card-title"><b>Radar Chart:</b> Programs in Every Colleges</div>
                 </div>
                 <div class="card-body">
                     <div class="card-container">
-                        <div class="biLineChart ct-perfect-fourth"></div>
+                        <canvas id="radarChart" class="radarChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Venn Diagram -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><b>Venn Diagram:</b> Distribution of Student Interests</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-container">
+                        <canvas id="vennChart" class="vennChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Horizontal Bar Chart -->
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
@@ -87,22 +110,10 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-9">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Scatter Plots Chart</div>
-                </div>
-                <div class="card-body">
-                    <div class="card-container">
-                        <div class="scatterPlotsChart ct-perfect-fourth"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Line Chart
@@ -128,33 +139,27 @@
                         Chartist.plugins.tooltip()
                     ]
                 });
-            })
+            });
 
-        // Pie Chart 
+        // Pie Chart
         fetch('/pie-student-count-by-org/')
             .then(response => response.json())
             .then(data => {
-                // Calculate percentages for labels
                 const total = data.series.reduce((sum, count) => sum + count, 0);
                 const percentages = data.series.map(count => ((count / total) * 100).toFixed(1) + '%');
 
-                // Prepare series with meta for tooltips
                 const seriesWithMeta = data.series.map((value, idx) => ({
                     value: value,
-                    meta: data.labels[idx] // Add program name as meta
+                    meta: data.labels[idx]
                 }));
 
-                // Create the Pie Chart with fetched data
                 new Chartist.Pie('.pieChart', {
-                    series: seriesWithMeta, 
-                    labels: percentages 
+                    series: seriesWithMeta,
+                    labels: percentages
                 }, {
                     chartPadding: 30,
                     labelOffset: 50,
                     labelDirection: 'explode',
-                    labelInterpolationFnc: function (value) {
-                        return value; 
-                    },
                     plugins: [
                         Chartist.plugins.tooltip({
                             tooltipFnc: function (meta, value) {
@@ -163,30 +168,67 @@
                         })
                     ]
                 });
-            })
+            });
 
+        // Radar Chart (Fake Data)
+        fetch('/program-frequency-chart/')
+        .then(response => response.json())
+        .then(data => {
+            // Prepare data for the radar chart
+            const labels = data.colleges;  // College names
+            const programCounts = data.program_counts;  // Program counts
 
-        // Bi-Polar Line Chart
-        new Chartist.Line('.biLineChart', {
-            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-            series: [
-                [1, -2, 3, -4, 5, -6, 7, -8, 9, -10]
-            ]
-        }, {
-            high: 10,
-            low: -10,
-            showArea: true,
-            showPoint: true,
-            fullWidth: true,
-            chartPadding: {
-                top: 15,
-                right: 30,
-                bottom: 15,
-                left: 15
+            // Create the radar chart
+            new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Programs per College',
+                        data: programCounts,
+                        fill: true,
+                        backgroundColor: 'rgba(79, 140, 255, 0.2)', // Color of the filled area
+                        borderColor: 'rgb(79, 140, 255)', // Border color of the chart
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Venn Diagram (Fake Data using Chart.js)
+        var vennCtx = document.getElementById('vennChart').getContext('2d');
+        var vennChart = new Chart(vennCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Arts', 'Sports', 'Music'],
+                datasets: [{
+                    label: 'Student Interests',
+                    data: [30, 45, 25],
+                    backgroundColor: ['rgba(135, 119, 255, 0.6)', 'rgba(255, 220, 23, 0.6)', 'rgba(133, 236, 181, 0.6)']
+                }]
             },
-            plugins: [
-                Chartist.plugins.tooltip()
-            ]
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' students';
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         // Horizontal Bar Chart
@@ -194,64 +236,27 @@
             .then(response => response.json())
             .then(data => {
                 new Chartist.Bar('.horBarChart', {
-                    labels: data.labels,  
-                    series: [data.series]  
+                    labels: data.labels,
+                    series: [data.series]
                 }, {
                     horizontalBars: true,
-                    reverseData: true,  
+                    reverseData: true,
                     axisX: {
-                        onlyInteger: true, // Force integer ticks
+                        onlyInteger: true,
                     },
                     axisY: {
-                        offset: 120,  // Adjust for long labels
+                        offset: 120,
                     },
                     plugins: [
                         Chartist.plugins.tooltip({
                             tooltipFnc: function (meta, value) {
-                                return `${value} organization(s)`;  
+                                return `${value} organization(s)`;
                             }
                         })
                     ]
                 });
-            })
-
-
-        // Scatter Plot Chart
-        const scatterData = {
-            series: [
-                Array.from({ length: 30 }, () => ({ x: Math.random() * 100, y: Math.random() * 100 })),
-                Array.from({ length: 30 }, () => ({ x: Math.random() * 100, y: Math.random() * 100 }))
-            ]
-        };
-
-        const scatterOptions = {
-            showLine: false,
-            axisX: {
-                labelInterpolationFnc: function (value) {
-                    return Math.round(value);
-                },
-                type: Chartist.FixedScaleAxis,
-                low: 0,  // Set minimum value for the x-axis
-                high: 100,  // Set maximum value for the x-axis
-                ticks: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]  // Define ticks to create more readable labels
-            },
-            // axisY: {
-            //     labelInterpolationFnc: function (value) {
-            //         return Math.round(value);
-            //     },
-            //     low: 0,  // Set minimum value for the y-axis
-            //     high: 100,  // Set maximum value for the y-axis
-            //     ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]  // Define ticks for better clarity
-            // },
-            plugins: [
-                Chartist.plugins.tooltip()
-            ]
-        };
-
-        new Chartist.Line('.scatterPlotsChart', scatterData, scatterOptions);
+            });
     });
 </script>
-
-
 
 {% endblock %}

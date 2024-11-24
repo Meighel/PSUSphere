@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, LineCountbyMonth2024, PieStudentCountbyOrg, OrgCountByCollege
+from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView, OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView, StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView, CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, LineCountbyMonth2024, PieStudentCountbyOrg, HorOrgCountByCollege, program_frequency_chart
 from studentorg import views
 from django.contrib.auth import views as auth_views
 
@@ -48,5 +48,6 @@ urlpatterns = [
     path('dashboard_chart', ChartView.as_view(), name='dashboard-chart'),
     path('line-count-by-month-2024/', views.LineCountbyMonth2024, name='line-count-by-month-2024'),
     path('pie-student-count-by-org/', views.PieStudentCountbyOrg, name='pie-student-count-by-org'),
-    path('org-count-by-college/', views.OrgCountByCollege, name='org-count-by-college'),
+    path('org-count-by-college/', views.HorOrgCountByCollege, name='org-count-by-college'),
+    path('program-frequency-chart/', views.program_frequency_chart, name='program_frequency_chart'),
 ]

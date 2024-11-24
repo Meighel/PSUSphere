@@ -13,7 +13,7 @@ from django.db.models import Q
 from django.db import connection
 from django.http import JsonResponse
 from django.db.models.functions import ExtractMonth
-from django.db.models import Count
+from django.db.models import Count, Avg
 from datetime import datetime
 
 @method_decorator(login_required, name='dispatch')
@@ -233,7 +233,7 @@ def PieStudentCountbyOrg(request):
 
     return JsonResponse(chart_data)
 
-def OrgCountByCollege(request):
+def HorOrgCountByCollege(request):
     data = (
         Organization.objects.values('college__college_name')
         .annotate(count=Count('id'))
@@ -246,3 +246,19 @@ def OrgCountByCollege(request):
     }
 
     return JsonResponse(chart_data)
+
+def program_frequency_chart(request):
+    # Fetch colleges and count the number of programs associated with each college
+    college_program_count = College.objects.annotate(num_programs=Count('program'))
+
+    # Prepare the data for the chart
+    colleges = [college.college_name for college in college_program_count]
+    program_counts = [college.num_programs for college in college_program_count]
+
+    # Return the data as JSON
+    data = {
+        'colleges': colleges,
+        'program_counts': program_counts,
+    }
+    
+    return JsonResponse(data)
