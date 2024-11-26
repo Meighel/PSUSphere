@@ -19,22 +19,36 @@
         stroke: rgb(135, 119, 255);
     }
 
-    .lineChart .barChart {
-        height: 400px;
-        width: 600px;
-        overflow: hidden;
+    .lineChart .pieChart .horBarChart .polarAreaChart .horBarChart{
+        max-width: 100%;
+        height: auto;
     }
 
     .page-inner {
         overflow-x: hidden;
         padding-left: 20px;
-        padding-top: 10%;
+        padding-top: 6%;
     }
 
     .col-md-9 {
         margin-top: 2%;
         margin-left: 2%;
     }
+
+    .card-container {
+        position: relative;
+        padding: 10px;
+        height: auto;
+        width: 100%;
+    }
+
+    .card {
+        width: 100%; 
+        max-width: 600px; 
+        margin: auto; 
+    }
+
+
 </style>
 
 <div class="page-inner">
@@ -76,7 +90,7 @@
                     <div class="card-title"><b>Radar Chart:</b> Programs in Every Colleges</div>
                 </div>
                 <div class="card-body">
-                    <div class="card-container">
+                    <div class="card-container" style="position: relative; height: 100%; width: 100%;">
                         <canvas id="radarChart" class="radarChart"></canvas>
                     </div>
                 </div>
@@ -90,7 +104,7 @@
                     <div class="card-title"><b>Polar Area Chart:</b> Number of Students Enrolled Every Year</div>
                 </div>
                 <div class="card-body">
-                    <div class="card-container">
+                    <div class="card-container" style="position: relative; height: 100%; width: 100%;">
                         <canvas id="polarAreaChart" class="polarAreaChart"></canvas>
                     </div>
                 </div>
@@ -191,6 +205,8 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         r: {
                             beginAtZero: true,
@@ -241,6 +257,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'top',
